@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Channel {
+  id         Int         @id @default(autoincrement())
+  name       String
+  category   String
+  created_at DateTime    @default(now())
+  promotions Promotion[]
+
+  @@map("channels")
+}
+
+model Promotion {
+  id               Int       @id @default(autoincrement())
+  original_message String
+  title            String?
+  description      String?
+  old_price        Int?
+  new_price        Int?
+  link             String?
+  image            String?
+  categories       String[]  @default([])
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @default(now())
+  send_date        DateTime?
+  channel_origin   Channel   @relation(fields: [channelId], references: [id])
+  channelId        Int
+
+  @@map("promotions")
+}
+
+model Sessions {
+  id               Int      @id @default(autoincrement())
+  telegram_session String?
+  whatsapp_session String?
+  created_at       DateTime @default(now())
+  updated_at       DateTime @default(now())
+}
