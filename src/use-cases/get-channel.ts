@@ -2,21 +2,22 @@ import { Channel } from "@/generated/prisma";
 import { ChannelsRepository } from "@/repositories/channels-repository";
 
 interface GetChannelUseCaseRequest {
-    name: string;
+    query: string;
+    page: number;
 }
 
 interface GetChannelUseCaseResponse {
-    channel: Channel | null;
+    channels: Channel[] | null;
 }
 
 export class GetChannelUseCase {
     constructor(private channelsRepository: ChannelsRepository) { }
 
-    async execute({ name }: GetChannelUseCaseRequest): Promise<GetChannelUseCaseResponse> {
-        const channel = await this.channelsRepository.findByName(name);
+    async execute({ query, page }: GetChannelUseCaseRequest): Promise<GetChannelUseCaseResponse> {
+        const channels = await this.channelsRepository.searchManyByName(query, page);
 
         return {
-            channel
+            channels
         };
     }
 }

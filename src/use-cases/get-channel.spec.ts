@@ -12,18 +12,41 @@ describe("Get Channel Use Case", () => {
     });
 
     it("should be able to search channel by name", async () => {
-        const createdChannel = await channelsRepository.create({
+        await channelsRepository.create({
             name: 'promocao',
             category: 'book',
             created_at: new Date()
         });
 
-        const { channel } = await sut.execute({
-            name: 'promocao'
+        const { channels } = await sut.execute({
+            query: 'promocao',
+            page: 1
         });
 
-        expect(channel).toEqual(expect.objectContaining({
-            name: createdChannel.name
-        }));
+        expect(channels).toHaveLength(1);
+        expect(channels).toEqual([
+            expect.objectContaining({ name: "promocao" }),
+        ]);
+    });
+
+    it("should be able to fetch paginated channel search", async () => {
+        for (let i = 1; i <= 22; i++) {
+            await channelsRepository.create({
+                name: `promocao ${i}`,
+                category: 'book',
+                created_at: new Date()
+            });
+        }
+
+        const { channels } = await sut.execute({
+            query: "promocao",
+            page: 2,
+        });
+
+        expect(channels).toHaveLength(2);
+        expect(channels).toEqual([
+            expect.objectContaining({ name: "promocao 21" }),
+            expect.objectContaining({ name: "promocao 22" }),
+        ]);
     });
 });

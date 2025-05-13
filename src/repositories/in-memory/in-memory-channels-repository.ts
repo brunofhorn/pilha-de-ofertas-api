@@ -5,14 +5,10 @@ import { randomInt } from "node:crypto";
 export class InMemoryChannelsRepository implements ChannelsRepository {
     public items: Channel[] = [];
 
-    async findByName(name: string) {
-        const channel = this.items.find((item) => item.name.includes(name));
-
-        if (!channel) {
-            return null;
-        }
-
-        return channel;
+    async searchManyByName(query: string, page: number) {
+        return this.items
+            .filter((item) => item.name.includes(query))
+            .slice((page - 1) * 20, page * 20);
     }
 
     async create({ name, category }: Prisma.ChannelCreateInput) {
