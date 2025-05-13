@@ -2,8 +2,8 @@ import { Session } from "@/generated/prisma";
 import { SessionsRepository } from "@/repositories/sessions-repository";
 
 interface CreateSessionUseCaseRequest {
-    telegram_session: string;
-    whatsapp_session: string;
+    telegram_session: string | null;
+    whatsapp_session: string | null;
 }
 
 interface CreateSessionUseCaseResponse {
