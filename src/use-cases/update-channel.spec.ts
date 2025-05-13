@@ -11,7 +11,7 @@ describe("Update Channel Use Case", () => {
         sut = new UpdateChannelUseCase(channelsRepository);
     });
 
-    it("should be able to register a new channel", async () => {
+    it("should be able to update a channel", async () => {
         const createdChannel = await channelsRepository.create({
             name: 'promocao',
             category: 'book',

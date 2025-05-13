@@ -5,7 +5,6 @@ interface UpdateChannelUseCaseRequest {
     id: number;
     name: string;
     category: string;
-    created_at: Date;
 }
 
 interface UpdateChannelUseCaseResponse {
@@ -15,12 +14,11 @@ interface UpdateChannelUseCaseResponse {
 export class UpdateChannelUseCase {
     constructor(private channelsRepository: ChannelsRepository) { }
 
-    async execute({ id, name, category, created_at }: UpdateChannelUseCaseRequest): Promise<UpdateChannelUseCaseResponse> {
+    async execute({ id, name, category }: UpdateChannelUseCaseRequest): Promise<UpdateChannelUseCaseResponse> {
         const channel = await this.channelsRepository.update({
             id,
             name,
             category,
-            created_at
         });
 
         return {
