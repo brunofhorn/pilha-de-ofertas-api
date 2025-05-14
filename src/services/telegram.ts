@@ -1,10 +1,24 @@
-import { TelegramClient } from "telegram";
+import { Api, TelegramClient } from "telegram";
 import { StringSession } from "telegram/sessions";
 import { NewMessage } from "telegram/events";
 import input from "input";
+import fs from 'fs/promises';
 
 export class TelegramService {
     private client: TelegramClient | null = null;
+
+    async saveSessionToFile(session: string) {
+        await fs.writeFile("./session.txt", session, "utf-8");
+    }
+
+    async loadSessionFromFile(): Promise<string | null> {
+        try {
+            const session = await fs.readFile("./session.txt", "utf-8");
+            return session;
+        } catch {
+            return null;
+        }
+    }
 
     async startClient(
         apiId: number,
@@ -27,7 +41,7 @@ export class TelegramService {
         console.log("✅ Telegram client started.");
     }
 
-    getSessionString(): string {
+    async getSessionString() {
         if (!this.client) throw new Error("Client not started.");
         return (this.client.session as StringSession).save();
     }
@@ -51,13 +65,13 @@ export class TelegramService {
         console.log(`📩 Message sent to ${groupName}`);
     }
 
-    addMessageHandler(handler: (event: NewMessage) => void): void {
+    async addMessageHandler(handler: (event: NewMessage) => void) {
         if (!this.client) throw new Error("Client not initialized.");
 
         this.client.addEventHandler(handler, new NewMessage({}));
     }
 
-    removeMessageHandler(handler: (event: NewMessage) => void): void {
+    async removeMessageHandler(handler: (event: NewMessage) => void) {
         if (!this.client) throw new Error("Client not initialized.");
 
         this.client.removeEventHandler(handler, new NewMessage({}));
@@ -69,5 +83,14 @@ export class TelegramService {
             this.client = null;
             console.log("⛔ Telegram client stopped.");
         }
+    }
+
+    async downloadMedia(media: Api.TypeMessageMedia): Promise<Buffer> {
+        if (!this.client) throw new Error("Telegram client not initialized.");
+
+        const result = await this.client.downloadMedia(media);
+        if (!result) throw new Error("Failed to download media.");
+
+        return Buffer.isBuffer(result) ? result : Buffer.from(result);
     }
 }

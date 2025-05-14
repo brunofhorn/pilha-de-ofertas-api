@@ -13,7 +13,7 @@ describe("Start Telegram Monitor Use Case", () => {
         telegramService = new TelegramService();
 
         vi.spyOn(telegramService, "startClient").mockImplementation(async () => {});
-        vi.spyOn(telegramService, "getSessionString").mockReturnValue("mocked_session");
+        vi.spyOn(telegramService, "getSessionString").mockResolvedValue("mocked_session");
 
         sut = new StartTelegramMonitorUseCase(sessionsRepository, telegramService);
     });

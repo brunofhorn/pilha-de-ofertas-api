@@ -5,6 +5,10 @@ import { randomInt } from "node:crypto";
 export class InMemoryChannelsRepository implements ChannelsRepository {
     public items: Channel[] = [];
 
+    async getAll(page: number) {
+        return this.items.slice((page - 1) * 20, page * 20);
+    }
+
     async searchManyByName(query: string, page: number) {
         return this.items
             .filter((item) => item.name.includes(query))
