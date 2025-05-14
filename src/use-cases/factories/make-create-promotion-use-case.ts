@@ -1,5 +1,5 @@
-import { CreatePromotionUseCase } from "../create-promotion";
 import { PrismaPromotionRepository } from "@/repositories/prisma/prisma-promotions-repository";
+import { CreatePromotionUseCase } from "../promotions/create-promotion";
 
 export function makeCreatePromotionUseCase() {
   const promotionsRepository = new PrismaPromotionRepository();
