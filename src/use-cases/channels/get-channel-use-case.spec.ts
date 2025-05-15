@@ -1,6 +1,6 @@
 import { InMemoryChannelsRepository } from "@/repositories/in-memory/in-memory-channels-repository";
 import { beforeEach, describe, expect, it } from "vitest";
-import { GetChannelUseCase } from "./get-channel";
+import { GetChannelUseCase } from "./get-channel-use-case";
 
 let channelsRepository: InMemoryChannelsRepository;
 let sut: GetChannelUseCase;

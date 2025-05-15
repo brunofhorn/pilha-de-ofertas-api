@@ -1,6 +1,6 @@
 import { InMemoryChannelsRepository } from "@/repositories/in-memory/in-memory-channels-repository";
 import { beforeEach, describe, expect, it } from "vitest";
-import { UpdateChannelUseCase } from "./update-channel";
+import { UpdateChannelUseCase } from "./update-channel-use-case";
 
 let channelsRepository: InMemoryChannelsRepository;
 let sut: UpdateChannelUseCase;
@@ -23,7 +23,6 @@ describe("Update Channel Use Case", () => {
            id: createdChannel.id,
            name: 'promocao-nova',
            category: createdChannel.category,
-           created_at: createdChannel.created_at
         });
 
         expect(channel.name).toEqual('promocao-nova');

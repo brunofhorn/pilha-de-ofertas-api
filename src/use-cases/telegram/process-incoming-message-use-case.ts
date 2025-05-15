@@ -18,6 +18,8 @@ export class ProcessIncomingMessageUseCase {
         const chat = await message.getChat();
         const channels = await this.channelsRepository.getAll(1);
 
+        if(!channels) return;
+        
         if (!isWhitelisted(chat, channels)) return;
 
         const alreadyExists = await this.promotionsRepository.searchMany(message.message, 1);

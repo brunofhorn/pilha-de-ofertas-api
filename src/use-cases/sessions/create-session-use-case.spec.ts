@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { InMemorySessionsRepository } from "@/repositories/in-memory/in-memory-sessions-repository";
-import { CreateSessionUseCase } from "./create-session";
+import { CreateSessionUseCase } from "./create-session-use-case";
 
 let sessionsRepository: InMemorySessionsRepository;
 let sut: CreateSessionUseCase;

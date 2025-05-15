@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryPromotionsRepository } from "@/repositories/in-memory/in-memory-promotions-repository";
-import { CreatePromotionUseCase } from "./create-promotion";
+import { CreatePromotionUseCase } from "./create-promotion-use-case";
 
 let promotionsRepository: InMemoryPromotionsRepository;
 let sut: CreatePromotionUseCase;

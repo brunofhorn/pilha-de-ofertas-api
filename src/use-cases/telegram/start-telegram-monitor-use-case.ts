@@ -17,7 +17,7 @@ export class StartTelegramMonitorUseCase {
         const session = await this.sessionsRepository.getSession();
         await this.telegramService.startClient(apiId, apiHash, session ?? undefined, phoneNumber);
 
-        const newSession = this.telegramService.getSessionString();
+        const newSession = await this.telegramService.getSessionString();
         await this.sessionsRepository.saveSession(newSession);
     }
 }
