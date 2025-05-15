@@ -3,21 +3,18 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
-    const updateChannelBodySchema = z.object({
-        id: z.coerce.number().min(1),
-        name: z.string(),
-        category: z.string()
+    const paramsSchema = z.object({ id: z.string() });
+    const bodySchema = z.object({
+        name: z.string().optional(),
+        category: z.string().optional(),
     });
 
-    const { id, name, category } = updateChannelBodySchema.parse(request.body);
+    const { id } = paramsSchema.parse(request.params);
+    const { name = '', category = '' } = bodySchema.parse(request.body);
 
-    const updateChannelUseCase = makeUpdateChannelUseCase();
+    const useCase = makeUpdateChannelUseCase();
 
-    await updateChannelUseCase.execute({
-        id,
-        name,
-        category
-    });
+    const updated = await useCase.execute({ id: Number(id), name, category });
 
-    return reply.status(200).send();
+    return reply.status(200).send({ updated });
 }

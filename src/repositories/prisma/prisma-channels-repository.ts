@@ -3,11 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { ChannelsRepository } from "../channels-repository";
 
 export class PrismaChannelRepository implements ChannelsRepository {
-    async getAll(page: number) {
-        const channels = await prisma.channel.findMany({
-            take: 20,
-            skip: (page - 1) * 20,
-        });
+    
+    async getAll() {
+        const channels = await prisma.channel.findMany();
 
         return channels;
     }
@@ -43,5 +41,13 @@ export class PrismaChannelRepository implements ChannelsRepository {
         });
 
         return channel;
+    }
+
+    async delete(id: number){
+        await prisma.channel.delete({
+            where: {
+                id
+            }
+        })
     }
 }

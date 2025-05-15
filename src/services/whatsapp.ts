@@ -85,11 +85,28 @@ export class WhatsAppService {
         await fs.writeFile(this.sessionFile, sessionData, "utf-8");
     }
 
-    async loadSessionData(){
+    async loadSessionData() {
         try {
             const session = await fs.readFile(this.sessionFile, "utf-8");
             return session.trim();
         } catch {
+            return null;
+        }
+    }
+
+    async findGroupByName(groupName: string): Promise<string | null> {
+        if (!this.client) {
+            throw new Error("WhatsApp client não está inicializado.");
+        }
+
+        const chats = await this.client.getChats();
+        const groupChat = chats.find((chat) => chat.isGroup && chat.name === groupName);
+
+        if (groupChat) {
+            console.log(`📌 ID do grupo: ${groupChat.id._serialized}`);
+            return groupChat.id._serialized;
+        } else {
+            console.log("❌ Grupo não encontrado.");
             return null;
         }
     }
