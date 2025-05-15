@@ -1,5 +1,5 @@
 import { PrismaSessionRepository } from "@/repositories/prisma/prisma-sessions-repository";
-import { UpdateSessionUseCase } from "../update-session";
+import { UpdateSessionUseCase } from "../sessions/update-session";
 
 export function makeUpdateSessionUseCase() {
   const channelsRepository = new PrismaSessionRepository();

@@ -1,5 +1,5 @@
-import { CreateSessionUseCase } from "../create-session";
 import { PrismaSessionRepository } from "@/repositories/prisma/prisma-sessions-repository";
+import { CreateSessionUseCase } from "../sessions/create-session";
 
 export function makeCreateSessionUseCase() {
   const sessionsRepository = new PrismaSessionRepository();

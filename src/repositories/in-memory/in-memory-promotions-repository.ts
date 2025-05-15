@@ -5,6 +5,42 @@ import { randomInt } from "node:crypto";
 export class InMemoryPromotionsRepository implements PromotionsRepository {
     public items: Promotion[] = [];
 
+    async getLast() {
+        return this.items.filter((item) => item.send_date === null);
+    }
+
+    async comparePromotion(id: number, title: string, description: string) {
+        const existing = this.items.find(
+            (item) => item.id === id && item.title === title && item.description === description
+        );
+
+        return !existing;
+    }
+
+    async update(promotion: Partial<Promotion>) {
+        if (!promotion.id) return null;
+
+        const index = this.items.findIndex((item) => item.id === promotion.id);
+
+        if (index === -1) return null;
+
+        const updated = {
+            ...this.items[index],
+            ...promotion,
+            updated_at: new Date(),
+        };
+
+        this.items[index] = updated;
+
+        return updated;
+    }
+
+
+    async delete(id: number) {
+        this.items = this.items.filter((item) => item.id !== id);
+    }
+
+
     async create(data: Prisma.PromotionCreateInput) {
         if (!data.channel_origin || !("connect" in data.channel_origin) || !data.channel_origin.connect?.id) {
             throw new Error("channel_origin with a valid channelId is required.");
