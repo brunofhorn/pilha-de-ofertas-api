@@ -5,8 +5,8 @@ import { randomInt } from "node:crypto";
 export class InMemoryChannelsRepository implements ChannelsRepository {
     public items: Channel[] = [];
 
-    async getAll(page: number) {
-        return this.items.slice((page - 1) * 20, page * 20);
+    async getAll() {
+        return this.items;
     }
 
     async searchManyByName(query: string, page: number) {
@@ -36,5 +36,15 @@ export class InMemoryChannelsRepository implements ChannelsRepository {
         }
 
         return channel;
+    }
+
+    async delete(id: number){
+        const index = this.items.findIndex(item => item.id === id);
+
+        if (index === -1) {
+            throw new Error(`Channel with id ${id} not found.`);
+        }
+
+        this.items.splice(index, 1);
     }
 }

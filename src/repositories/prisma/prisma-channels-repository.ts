@@ -3,11 +3,11 @@ import { prisma } from "@/lib/prisma";
 import { ChannelsRepository } from "../channels-repository";
 
 export class PrismaChannelRepository implements ChannelsRepository {
-    
-    async getAll() {
-        const channels = await prisma.channel.findMany();
 
-        return channels;
+    async getAll() {
+        return prisma.channel.findMany({
+            orderBy: { created_at: "desc" },
+        });
     }
 
     async searchManyByName(query: string, page: number) {
@@ -43,11 +43,13 @@ export class PrismaChannelRepository implements ChannelsRepository {
         return channel;
     }
 
-    async delete(id: number){
-        await prisma.channel.delete({
-            where: {
-                id
-            }
-        })
+    async delete(id: number): Promise<void> {
+        const channel = await prisma.channel.findUnique({ where: { id } });
+
+        if (!channel) {
+            throw new Error(`Channel with id ${id} not found.`);
+        }
+
+        await prisma.channel.delete({ where: { id } });
     }
 }
