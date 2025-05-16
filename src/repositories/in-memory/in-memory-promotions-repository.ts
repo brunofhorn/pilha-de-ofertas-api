@@ -20,7 +20,7 @@ export class InMemoryPromotionsRepository implements PromotionsRepository {
     async update(promotion: Partial<Promotion>) {
         if (!promotion.id) return null;
 
-        const index = this.items.findIndex((item) => item.id === promotion.id);
+        const index = this.items.findIndex(item => item.id === promotion.id);
 
         if (index === -1) return null;
 
@@ -34,7 +34,6 @@ export class InMemoryPromotionsRepository implements PromotionsRepository {
 
         return updated;
     }
-
 
     async delete(id: number) {
         this.items = this.items.filter((item) => item.id !== id);
