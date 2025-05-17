@@ -2,6 +2,8 @@ import { PrismaChannelRepository } from "@/repositories/prisma/prisma-channels-r
 import { DeleteChannelUseCase } from "@/use-cases/channels/delete-channel-use-case";
 
 export function makeDeleteChannelUseCase() {
-    const repository = new PrismaChannelRepository();
-    return new DeleteChannelUseCase(repository);
+    const channelsRepository = new PrismaChannelRepository();
+    const useCase = new DeleteChannelUseCase(channelsRepository);
+
+    return useCase;
 }

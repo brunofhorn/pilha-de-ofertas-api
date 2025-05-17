@@ -3,22 +3,21 @@ import { prisma } from "@/lib/prisma";
 import { ChannelsRepository } from "../channels-repository";
 
 export class PrismaChannelRepository implements ChannelsRepository {
-
-    async getAll() {
-        return prisma.channel.findMany({
+    async get() {
+        const channels = await prisma.channel.findMany({
             orderBy: { created_at: "desc" },
         });
+
+        return channels;
     }
 
-    async searchManyByName(query: string, page: number) {
+    async searchManyByName(query: string) {
         const channels = await prisma.channel.findMany({
             where: {
                 name: {
                     contains: query,
                 },
             },
-            take: 20,
-            skip: (page - 1) * 20,
         });
 
         return channels;

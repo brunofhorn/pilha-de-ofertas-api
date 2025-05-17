@@ -3,7 +3,6 @@ import { PromotionsRepository } from "@/repositories/promotions-repository";
 
 interface SearchPromotionsUseCaseRequest {
     query: string;
-    page: number;
 }
 
 interface SearchPromotionsUseCaseResponse {
@@ -13,11 +12,8 @@ interface SearchPromotionsUseCaseResponse {
 export class SearchPromotionsUseCase {
     constructor(private promotionsRepository: PromotionsRepository) { }
 
-    async execute({
-        query,
-        page,
-    }: SearchPromotionsUseCaseRequest): Promise<SearchPromotionsUseCaseResponse> {
-        const promotions = await this.promotionsRepository.searchMany(query, page);
+    async execute({ query }: SearchPromotionsUseCaseRequest): Promise<SearchPromotionsUseCaseResponse> {
+        const promotions = await this.promotionsRepository.searchMany(query);
 
         return {
             promotions,

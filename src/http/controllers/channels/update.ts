@@ -14,7 +14,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
     const useCase = makeUpdateChannelUseCase();
 
-    const updated = await useCase.execute({ id: Number(id), name, category });
+    const { channel } = await useCase.execute({ id: Number(id), name, category });
 
-    return reply.status(200).send({ updated });
+    return reply.status(200).send({ channel });
 }

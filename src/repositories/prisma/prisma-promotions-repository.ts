@@ -4,14 +4,14 @@ import { prisma } from "@/lib/prisma";
 
 export class PrismaPromotionRepository implements PromotionsRepository {
     async getLast() {
-        const lastPromotions =  await prisma.promotion.findMany({
+        const lastPromotions = await prisma.promotion.findMany({
             where: { send_date: null },
             take: 10,
         });
 
-        if(!lastPromotions) return [];
+        if (!lastPromotions) return [];
 
-        return lastPromotions
+        return lastPromotions;
     }
 
     async comparePromotion(id: number, title: string, description: string) {
@@ -46,7 +46,7 @@ export class PrismaPromotionRepository implements PromotionsRepository {
         return promotion;
     }
 
-    async send(id: number) {
+    async markAsSent(id: number) {
         const promotion = await prisma.promotion.update({
             where: { id },
             data: {
@@ -58,7 +58,7 @@ export class PrismaPromotionRepository implements PromotionsRepository {
         return promotion;
     }
 
-    async searchMany(query: string, page: number) {
+    async searchMany(query: string) {
         const promotions = await prisma.promotion.findMany({
             where: {
                 OR: [
@@ -67,8 +67,6 @@ export class PrismaPromotionRepository implements PromotionsRepository {
                     { description: { contains: query, mode: "insensitive" } },
                 ],
             },
-            take: 20,
-            skip: (page - 1) * 20,
             orderBy: {
                 created_at: "desc",
             },

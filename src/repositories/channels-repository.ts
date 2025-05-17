@@ -1,9 +1,9 @@
 import { Channel, Prisma } from "@/generated/prisma";
 
 export interface ChannelsRepository {
-    getAll(): Promise<Channel[] | null>;
-    searchManyByName(query: string, page: number): Promise<Channel[] | null>;
+    get(): Promise<Channel[] | null>;
     create(data: Prisma.ChannelCreateInput): Promise<Channel>;
     update(data: Prisma.ChannelUncheckedUpdateInput): Promise<Channel>;
-    delete(id: number): Promise<void>
+    delete(id: number): Promise<void>;
+    searchManyByName(query: string): Promise<Channel[] | null>;
 }

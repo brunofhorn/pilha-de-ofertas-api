@@ -68,7 +68,7 @@ export class InMemoryPromotionsRepository implements PromotionsRepository {
         return promotion;
     }
 
-    async send(id: number) {
+    async markAsSent(id: number) {
         const promotionIndex = this.items.findIndex((item) => item.id === id);
 
         if (promotionIndex === -1) {
@@ -86,7 +86,7 @@ export class InMemoryPromotionsRepository implements PromotionsRepository {
         return updatedPromotion;
     }
 
-    async searchMany(query: string, page: number) {
+    async searchMany(query: string) {
         return this.items.filter((item) => {
             const fields = [
                 item.original_message ?? "",
@@ -95,7 +95,7 @@ export class InMemoryPromotionsRepository implements PromotionsRepository {
             ].map((field) => field.toLowerCase());
 
             return fields.some((field) => field.includes(query.toLowerCase()));
-        }).slice((page - 1) * 20, page * 20);
+        });
     }
 
 }

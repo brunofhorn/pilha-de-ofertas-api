@@ -1,52 +1,29 @@
+import { describe, it, expect, beforeEach } from "vitest";
 import { InMemoryChannelsRepository } from "@/repositories/in-memory/in-memory-channels-repository";
-import { beforeEach, describe, expect, it } from "vitest";
 import { GetChannelUseCase } from "./get-channel-use-case";
 
 let channelsRepository: InMemoryChannelsRepository;
 let sut: GetChannelUseCase;
 
-describe("Get Channel Use Case", () => {
+describe("Get Channels Use Case", () => {
     beforeEach(() => {
         channelsRepository = new InMemoryChannelsRepository();
         sut = new GetChannelUseCase(channelsRepository);
     });
 
-    it("should be able to search channel by name", async () => {
-        await channelsRepository.create({
-            name: 'promocao',
-            category: 'book',
-            created_at: new Date()
-        });
+    it("should return all channels", async () => {
+        await channelsRepository.create({ name: "Promoções", category: "tech" });
+        await channelsRepository.create({ name: "Livros", category: "book"});
 
-        const { channels } = await sut.execute({
-            query: 'promocao',
-            page: 1
-        });
-
-        expect(channels).toHaveLength(1);
-        expect(channels).toEqual([
-            expect.objectContaining({ name: "promocao" }),
-        ]);
-    });
-
-    it("should be able to fetch paginated channel search", async () => {
-        for (let i = 1; i <= 22; i++) {
-            await channelsRepository.create({
-                name: `promocao ${i}`,
-                category: 'book',
-                created_at: new Date()
-            });
-        }
-
-        const { channels } = await sut.execute({
-            query: "promocao",
-            page: 2,
-        });
+        const { channels } = await sut.execute();
 
         expect(channels).toHaveLength(2);
-        expect(channels).toEqual([
-            expect.objectContaining({ name: "promocao 21" }),
-            expect.objectContaining({ name: "promocao 22" }),
-        ]);
+        expect(channels![0].name).toBe("Promoções");
+        expect(channels![1].name).toBe("Livros");
+    });
+
+    it("should return empty array when no channels exist", async () => {
+        const { channels } = await sut.execute();
+        expect(channels).toHaveLength(0);
     });
 });

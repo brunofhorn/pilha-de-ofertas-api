@@ -29,6 +29,16 @@ const envSchema = z.object({
   WHATSAPP_OFFICE_GROUP_ID: z.string(),
   TELEGRAM_NAME_GROUP_TEST: z.string(),
   TELEGRAM_NAME_GROUP: z.string(),
+  TELEGRAM_API_ID: z.preprocess(
+    (val) => Number(val),
+    z.number().positive("TELEGRAM_API_ID deve ser um número positivo válido.")
+  ),
+  TELEGRAM_API_HASH: z.string(),
+  PHONE_NUMBER: z.string(),
+  PERSONAL_PHONE_NUMBER: z.string(),
+  EMAIL_SENDER: z.string(),
+  EMAIL_PASSWORD: z.string(),
+  EMAIL_RECEIVER: z.string()
 });
 
 const _env = envSchema.safeParse(process.env);
