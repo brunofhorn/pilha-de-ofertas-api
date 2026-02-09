@@ -4,17 +4,19 @@ import { PromotionsRepository } from "@/repositories/promotions-repository";
 interface CreatePromotionUseCaseRequest extends Prisma.PromotionCreateInput {}
 
 interface CreatePromotionUseCaseResponse {
-    promotion: Promotion;
+  promotion: Promotion;
 }
 
 export class CreatePromotionUseCase {
-    constructor(private promotionsRepository: PromotionsRepository) {}
+  constructor(private promotionsRepository: PromotionsRepository) {}
 
-    async execute(data: CreatePromotionUseCaseRequest): Promise<CreatePromotionUseCaseResponse> {
-        const promotion = await this.promotionsRepository.create(data);
+  async execute(
+    data: CreatePromotionUseCaseRequest
+  ): Promise<CreatePromotionUseCaseResponse> {
+    const promotion = await this.promotionsRepository.create(data);
 
-        return {
-            promotion,
-        };
-    }
+    return {
+      promotion,
+    };
+  }
 }

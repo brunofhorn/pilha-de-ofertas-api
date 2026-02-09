@@ -38,7 +38,8 @@ const envSchema = z.object({
   PERSONAL_PHONE_NUMBER: z.string(),
   EMAIL_SENDER: z.string(),
   EMAIL_PASSWORD: z.string(),
-  EMAIL_RECEIVER: z.string()
+  EMAIL_RECEIVER: z.string(),
+  GEMINI_API_KEY: z.string()
 });
 
 const _env = envSchema.safeParse(process.env);

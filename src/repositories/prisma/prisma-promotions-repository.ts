@@ -3,75 +3,118 @@ import { PromotionsRepository } from "../promotions-repository";
 import { prisma } from "@/lib/prisma";
 
 export class PrismaPromotionRepository implements PromotionsRepository {
-    async getLast() {
-        const lastPromotions = await prisma.promotion.findMany({
-            where: { send_date: null },
-            take: 10,
-        });
+  async findByOriginalMessage(originalMessage: string) {
+    const promotion = await prisma.promotion.findFirst({
+      where: { original_message: originalMessage },
+    });
 
-        if (!lastPromotions) return [];
+    return promotion;
+  }
 
-        return lastPromotions;
+  async getLast() {
+    const lastPromotions = await prisma.promotion.findMany({
+      where: { send_date: null },
+      take: 10,
+    });
+
+    if (!lastPromotions) return [];
+
+    return lastPromotions;
+  }
+
+  async comparePromotion(id: number, title: string, description: string) {
+    const existing = await prisma.promotion.findFirst({
+      where: {
+        AND: [
+          { id: { equals: id } },
+          { title: { contains: title } },
+          { description: { contains: description } },
+        ],
+      },
+    });
+
+    return !!existing;
+  }
+
+  async update(promotion: Promotion) {
+    if (!promotion.id) return null;
+
+    const updatedPromotion = await prisma.promotion.update({
+      where: { id: promotion.id },
+      data: { ...promotion, updated_at: new Date() },
+    });
+
+    return updatedPromotion;
+  }
+
+  async delete(id: number) {
+    await prisma.promotion.delete({ where: { id } });
+  }
+
+  async create(data: Prisma.PromotionCreateInput) {
+    const promotion = await prisma.promotion.create({
+      data,
+    });
+
+    return promotion;
+  }
+
+  async markAsSent(id: number) {
+    const promotion = await prisma.promotion.update({
+      where: { id },
+      data: {
+        send_date: new Date(),
+        updated_at: new Date(),
+      },
+    });
+
+    return promotion;
+  }
+
+  async searchMany(
+    original_message?: string,
+    title?: string,
+    description?: string
+  ) {
+    const filters: Prisma.PromotionWhereInput[] = [];
+
+    if (original_message?.trim()) {
+      filters.push({
+        original_message: {
+          contains: original_message,
+          mode: Prisma.QueryMode.insensitive,
+        },
+      });
     }
 
-    async comparePromotion(id: number, title: string, description: string) {
-        const existing = await prisma.promotion.findFirst({
-            where: { id, title, description },
-        });
-
-        return !existing;
+    if (title?.trim()) {
+      filters.push({
+        AND: [
+          { title: { not: null } },
+          { title: { contains: title, mode: Prisma.QueryMode.insensitive } },
+        ],
+      });
     }
 
-    async update(promotion: Promotion) {
-        if (!promotion.id) return null;
-
-        const updatedPromotion = await prisma.promotion.update({
-            where: { id: promotion.id },
-            data: { ...promotion, updated_at: new Date() },
-        });
-
-        return updatedPromotion;
-    }
-
-    async delete(id: number) {
-        await prisma.promotion.delete({ where: { id } });
-    }
-
-
-    async create(data: Prisma.PromotionCreateInput) {
-        const promotion = await prisma.promotion.create({
-            data,
-        });
-
-        return promotion;
-    }
-
-    async markAsSent(id: number) {
-        const promotion = await prisma.promotion.update({
-            where: { id },
-            data: {
-                send_date: new Date(),
-                updated_at: new Date(),
+    if (description?.trim()) {
+      filters.push({
+        AND: [
+          { description: { not: null } },
+          {
+            description: {
+              contains: description,
+              mode: Prisma.QueryMode.insensitive,
             },
-        });
-
-        return promotion;
+          },
+        ],
+      });
     }
 
-    async searchMany(query: string) {
-        const promotions = await prisma.promotion.findMany({
-            where: {
-                OR: [
-                    { original_message: { contains: query, mode: "insensitive" } },
-                    { title: { contains: query, mode: "insensitive" } },
-                    { description: { contains: query, mode: "insensitive" } },
-                ],
-            },
-            orderBy: {
-                created_at: "desc",
-            },
-        });
+    const promotions = await prisma.promotion.findMany({
+      where: filters.length > 0 ? { OR: filters } : undefined,
+      orderBy: { created_at: "desc" },
+    });
 
-        return promotions;
-    }
+    return promotions;
+  }
 }

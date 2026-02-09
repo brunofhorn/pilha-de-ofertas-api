@@ -1,3 +1,4 @@
+import { LogErrors } from "@/interfaces/log";
 import { identifyMarketplaces } from "../identify-marketplaces";
 import { expandUrl } from "./expand-url";
 import { generateAmazonUrl } from "./generate-amazon-url";
@@ -7,21 +8,21 @@ import { generateShopeeUrl } from "./generate-shopee-url";
 
 export async function generateLink(link: string){
 	if (!link) {
-		console.log("O link não existe.");
+		console.log(LogErrors.LINK_UNEXIST);
 		return false;
 	}
 	
 	const expandedLink = await expandUrl(link);
 
 	if (!expandedLink) {
-		console.log("Erro ao expandir o link.");
+		console.log(LogErrors.EXPAND_URL_ERROR, expandedLink);
 		return false;
 	}
 
 	const marketplace = await identifyMarketplaces(expandedLink);
 	
 	if (!marketplace) {
-		console.log("Marketplace não reconhecido.");
+		console.log(LogErrors.UNRECOGNIZED_MARKETPLACE);
 		return false;
 	}
 
@@ -35,9 +36,7 @@ export async function generateLink(link: string){
 		case "magazineluiza":
 			return await generateMagazineLuizaUrl(expandedLink);
 		default:
-			console.log(
-				"Nenhuma função de afiliado implementada para este marketplace."
-			);
+			console.log(LogErrors.MARKETPLACE_NOT_REGISTERED);
 			return false;
 	}
 };

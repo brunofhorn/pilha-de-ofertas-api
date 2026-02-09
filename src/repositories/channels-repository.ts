@@ -1,7 +1,7 @@
 import { Channel, Prisma } from "@/generated/prisma";
 
 export interface ChannelsRepository {
-    get(): Promise<Channel[] | null>;
+    get(): Promise<Channel[]>;
     create(data: Prisma.ChannelCreateInput): Promise<Channel>;
     update(data: Prisma.ChannelUncheckedUpdateInput): Promise<Channel>;
     delete(id: number): Promise<void>;

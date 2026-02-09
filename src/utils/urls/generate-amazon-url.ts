@@ -1,4 +1,6 @@
 import { env } from "@/env";
+import { logError } from "../log-error";
+import { LogErrors } from "@/interfaces/log";
 
 export async function generateAmazonUrl(url: string){
 	if (!url) {
@@ -16,7 +18,7 @@ export async function generateAmazonUrl(url: string){
 
 		return null;
 	} catch (error) {
-		console.error("Erro ao gerar link de afiliado:", error);
+		logError(LogErrors.NO_AFFILIATE_LINK + url, error);
 		return null;
 	}
 };
